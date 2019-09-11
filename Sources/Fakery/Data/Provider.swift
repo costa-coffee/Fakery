@@ -13,17 +13,22 @@ public final class Provider {
     } else {
       let bundle = Bundle(for: Provider.self)
 
+      #if !os(Linux)
       var path = bundle.path(forResource: locale,
                              ofType: Config.pathExtension,
                              inDirectory: Config.dirPath) ??
                  bundle.path(forResource: locale,
                              ofType: Config.pathExtension,
                              inDirectory: Config.dirFrameworkPath)
+      #else
+      var path: String?
+      #endif
 
       if !Config.dirResourcePath.isEmpty {
         path = "\(Config.dirResourcePath)/\(locale).\(Config.pathExtension)"
       }
 
+      #if !os(Linux)
       if let resourcePath = Bundle(for: Provider.self).resourcePath {
         let bundlePath = resourcePath + "/Faker.bundle"
 
@@ -31,6 +36,7 @@ public final class Provider {
           path = bundle.path(forResource: locale, ofType: Config.pathExtension)
         }
       }
+      #endif
 
       if let path = path {
         let fileURL = URL(fileURLWithPath: path)
