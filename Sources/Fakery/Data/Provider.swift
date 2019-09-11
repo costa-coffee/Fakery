@@ -11,9 +11,9 @@ public final class Provider {
     if let translationData = translations[locale] {
       translation = translationData
     } else {
+      #if !os(Linux)
       let bundle = Bundle(for: Provider.self)
 
-      #if !os(Linux)
       var path = bundle.path(forResource: locale,
                              ofType: Config.pathExtension,
                              inDirectory: Config.dirPath) ??
